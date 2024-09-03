@@ -2,10 +2,26 @@ import * as React from 'react';
 import Link from 'next/link';
 import { FaBell, FaCog, FaUser, FaSearch, FaWallet, FaChartLine, FaUsers, FaSignOutAlt, FaMoon } from 'react-icons/fa';
 import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
 
 export default function Dashboard() {
   const router = useRouter();
   const [showNotifications, setShowNotifications] = React.useState(false);
+  const { data: session, status } = useSession();
+
+  React.useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.push('/login');
+    }
+  }, [status, router]);
+
+  if (status === 'loading') {
+    return <div>Loading...</div>;
+  }
+
+  if (!session) {
+    return null;
+  }
 
   return (
     <div className="flex min-h-screen bg-gray-100 p-3">
@@ -57,10 +73,10 @@ export default function Dashboard() {
             </div>
           </div>
           <div className="flex items-center">
-            <img src="/avatar.jpg" alt="User Avatar" className="w-10 h-10 rounded-full mr-3" />
+            <img src={session?.user?.image || "/default-avatar.jpg"} alt="User Avatar" className="w-10 h-10 rounded-full mr-3" />
             <div>
-              <p className="font-semibold">John Doe</p>
-              <p className="text-sm text-gray-400">john@example.com</p>
+              <p className="font-semibold">{session?.user?.name}</p>
+              <p className="text-sm text-gray-400">{session?.user?.email}</p>
             </div>
           </div>
         </div>

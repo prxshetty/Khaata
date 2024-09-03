@@ -1,9 +1,11 @@
 import { z } from 'zod';
 
 export const UserSchema = z.object({
+  id: z.number().optional(),
   name: z.string().min(2).max(50),
   email: z.string().email(),
-  password: z.string().min(6),
+  password: z.string().min(6).optional(),
+  image: z.string().url().optional(),
 });
 
 export const ExpenseSchema = z.object({

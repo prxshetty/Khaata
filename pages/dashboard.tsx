@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { FaBell, FaCog, FaUser, FaSearch, FaWallet, FaChartLine, FaUsers, FaSignOutAlt, FaMoon } from 'react-icons/fa';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
+import Image from 'next/image';
 
 export default function Dashboard() {
   const router = useRouter();
@@ -28,7 +29,13 @@ export default function Dashboard() {
       {/* Sidebar */}
       <aside className="w-72 bg-[#121212] text-white rounded-2xl mr-3 flex flex-col">
         <div className="p-5 flex items-center">
-          <img src="/logo.svg" alt="Khaata Logo" className="w-9 h-9 mr-3 rounded-full" />
+          <Image
+            src="/logo.svg"
+            alt="Khaata Logo"
+            width={36}
+            height={36}
+            layout="responsive"
+          />
           <h1 className="text-2xl font-bold">Khaata</h1>
         </div>
         <nav className="mt-6 flex-grow">
@@ -73,7 +80,14 @@ export default function Dashboard() {
             </div>
           </div>
           <div className="flex items-center">
-            <img src={session?.user?.image || "/default-avatar.jpg"} alt="User Avatar" className="w-10 h-10 rounded-full mr-3" />
+            <Image
+              src={session?.user?.image || "/default-avatar.jpg"}
+              alt="User Avatar"
+              width={40}
+              height={40}
+              layout="responsive"
+              className="w-10 h-10 rounded-full mr-3"
+            />
             <div>
               <p className="font-semibold">{session?.user?.name}</p>
               <p className="text-sm text-gray-400">{session?.user?.email}</p>
@@ -224,28 +238,56 @@ export default function Dashboard() {
           {/* Sample contacts */}
           <li className="flex items-center justify-between">
             <div className="flex items-center flex-1 mr-2">
-              <img src="/avatar1.jpg" alt="Contact" className="w-10 h-10 rounded-full mr-3" />
+              <Image
+                src="/avatar1.jpg"
+                alt="Contact"
+                width={40}
+                height={40}
+                layout="responsive"
+                className="w-10 h-10 rounded-full mr-3"
+              />
               <span className="text-[#343A40] truncate">Jane Smith</span>
             </div>
             <button className="px-3 py-1 bg-blue-500 text-white rounded-full text-sm hover:bg-blue-600 whitespace-nowrap">Settle Up</button>
           </li>
           <li className="flex items-center justify-between">
             <div className="flex items-center flex-1 mr-2">
-              <img src="/avatar2.jpg" alt="Contact" className="w-10 h-10 rounded-full mr-3" />
+              <Image
+                src="/avatar2.jpg"
+                alt="Contact"
+                width={40}
+                height={40}
+                layout="responsive"
+                className="w-10 h-10 rounded-full mr-3"
+              />
               <span className="text-[#343A40] truncate">Michael Johnson</span>
             </div>
             <button className="px-3 py-1 bg-blue-500 text-white rounded-full text-sm hover:bg-blue-600 whitespace-nowrap">Settle Up</button>
           </li>
           <li className="flex items-center justify-between">
             <div className="flex items-center flex-1 mr-2">
-              <img src="/avatar3.jpg" alt="Contact" className="w-10 h-10 rounded-full mr-3" />
+              <Image
+                src="/avatar3.jpg"
+                alt="Contact"
+                width={40}
+                height={40}
+                layout="responsive"
+                className="w-10 h-10 rounded-full mr-3"
+              />
               <span className="text-[#343A40] truncate">Emily Davis</span>
             </div>
             <button className="px-3 py-1 bg-blue-500 text-white rounded-full text-sm hover:bg-blue-600 whitespace-nowrap">Settle Up</button>
           </li>
           <li className="flex items-center justify-between">
             <div className="flex items-center flex-1 mr-2">
-              <img src="/avatar4.jpg" alt="Contact" className="w-10 h-10 rounded-full mr-3" />
+              <Image
+                src="/avatar4.jpg"
+                alt="Contact"
+                width={40}
+                height={40}
+                layout="responsive"
+                className="w-10 h-10 rounded-full mr-3"
+              />
               <span className="text-[#343A40] truncate">Robert Wilson</span>
             </div>
             <button className="px-3 py-1 bg-blue-500 text-white rounded-full text-sm hover:bg-blue-600 whitespace-nowrap">Settle Up</button>

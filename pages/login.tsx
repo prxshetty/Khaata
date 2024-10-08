@@ -1,3 +1,5 @@
+/* eslint-disable react/no-unescaped-entities */
+
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -36,14 +38,35 @@ export default function Login() {
       }
     } else {
       // Sign up logic
-      // Here you would typically call an API to create a new user
-      console.log("Sign up with", { name, email, password });
-      // After successful sign up, you can automatically sign in the user
-      await signIn("credentials", {
-        redirect: false,
-        email,
-        password,
-      });
+      try {
+        const response = await fetch('/api/auth/signup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, password }),
+        });
+
+        if (response.ok) {
+          // Automatically sign in the user after successful signup
+          const signInResult = await signIn("credentials", {
+            redirect: false,
+            email,
+            password,
+          });
+
+          if (signInResult?.error) {
+            console.error(signInResult.error);
+          } else {
+            router.push("/dashboard");
+          }
+        } else {
+          const errorData = await response.json();
+          console.error('Signup failed:', errorData.message);
+          // Here you would typically show an error message to the user
+        }
+      } catch (error) {
+        console.error('Signup error:', error);
+        // Here you would typically show an error message to the user
+      }
     }
   };
 

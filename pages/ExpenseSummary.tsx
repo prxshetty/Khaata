@@ -2,6 +2,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import { FaChartLine, FaBell, FaWallet, FaUsers, FaSignOutAlt, FaCog } from 'react-icons/fa';
 import { useRouter } from 'next/router';
+import Image from 'next/image';
 
 const ExpenseSummary: React.FC = () => {
   const router = useRouter();
@@ -11,7 +12,14 @@ const ExpenseSummary: React.FC = () => {
       {/* Sidebar */}
       <aside className="w-72 bg-[#121212] text-white rounded-2xl mr-3 flex flex-col">
         <div className="p-5 flex items-center">
-          <img src="/logo.svg" alt="Khaata Logo" className="w-9 h-9 mr-3 rounded-full" />
+          <Image
+            src="/logo.svg"
+            alt="Khaata Logo"
+            width={100}
+            height={100}
+            layout="responsive"
+            className="w-9 h-9 mr-3 rounded-full"
+          />
           <h1 className="text-2xl font-bold">Khaata</h1>
         </div>
         <nav className="mt-6 flex-grow">
@@ -54,7 +62,14 @@ const ExpenseSummary: React.FC = () => {
             </div>
           </div>
           <div className="flex items-center">
-            <img src="/avatar.jpg" alt="User Avatar" className="w-10 h-10 rounded-full mr-3" />
+            <Image
+              src="/avatar.jpg"
+              alt="User Avatar"
+              width={100}
+              height={100}
+              layout="responsive"
+              className="w-10 h-10 rounded-full mr-3"
+            />
             <div>
               <p className="font-semibold">John Doe</p>
               <p className="text-sm text-gray-400">john@example.com</p>

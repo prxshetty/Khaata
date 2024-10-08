@@ -2,6 +2,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import { FaChartLine, FaBell, FaWallet, FaUsers, FaSignOutAlt, FaFilter, FaSearch, FaPlus, FaFileExport, FaEllipsisV, FaCog } from 'react-icons/fa';
 import { useRouter } from 'next/router';
+import Image from 'next/image';
 
 const activities = [
   { id: 1, location: 'Restaurant', category: 'Food', amount: 50, bill: '/bill1.pdf', date: '2023-10-01 19:30', addedBy: { name: 'John Doe', email: 'john@example.com', avatar: '/avatar1.jpg' } },
@@ -20,7 +21,7 @@ const RecentActivity: React.FC = () => {
       {/* Sidebar */}
       <aside className="w-72 bg-[#121212] text-white rounded-2xl mr-3 flex flex-col">
         <div className="p-5 flex items-center">
-          <img src="/logo.svg" alt="Khaata Logo" className="w-9 h-9 mr-3 rounded-full" />
+          <Image src="/logo.svg" alt="Khaata Logo" width={36} height={36} layout="fixed" />
           <h1 className="text-2xl font-bold">Khaata</h1>
         </div>
         <nav className="mt-6 flex-grow">
@@ -63,7 +64,7 @@ const RecentActivity: React.FC = () => {
             </div>
           </div>
           <div className="flex items-center">
-            <img src="/avatar.jpg" alt="User Avatar" className="w-10 h-10 rounded-full mr-3" />
+            <Image src="/avatar.jpg" alt="User Avatar" width={40} height={40} layout="fixed" />
             <div>
               <p className="font-semibold">John Doe</p>
               <p className="text-sm text-gray-400">john@example.com</p>
@@ -146,7 +147,7 @@ const RecentActivity: React.FC = () => {
                   <td className="px-6 py-4 text-gray-500">{activity.date}</td>
                   <td className="px-6 py-4">
                     <div className="flex items-center">
-                      <img src={activity.addedBy.avatar} alt={activity.addedBy.name} className="w-8 h-8 rounded-full mr-2" />
+                      <Image src={activity.addedBy.avatar} alt={activity.addedBy.name} width={40} height={40} layout="fixed" />
                       <div>
                         <p className="font-medium">{activity.addedBy.name}</p>
                         <p className="text-sm text-gray-500">{activity.addedBy.email}</p>

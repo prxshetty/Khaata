@@ -7,9 +7,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ message: 'Method not allowed' });
   }
 
-  const { name, email, password } = req.body;
+  const { firstName, lastName, email, password } = req.body;
 
-  if (!name || !email || !password) {
+  if (!firstName || !lastName || !email || !password) {
     return res.status(400).json({ message: 'Missing required fields' });
   }
 
@@ -25,9 +25,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const [existingUsers] = await connection.execute(
       'SELECT * FROM users WHERE email = ?',
       [email]
-    );
+    ) as any;
 
-    if (Array.isArray(existingUsers) && existingUsers.length > 0) {
+    if (existingUsers.length > 0) {
       await connection.end();
       return res.status(409).json({ message: 'User already exists' });
     }
@@ -37,9 +37,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Insert new user
     const [result] = await connection.execute(
-      'INSERT INTO users (name, email, password) VALUES (?, ?, ?)',
-      [name, email, hashedPassword]
-    );
+      'INSERT INTO users (first_name, last_name, email, password) VALUES (?, ?, ?, ?)',
+      [firstName, lastName, email, hashedPassword]
+    ) as any;
 
     await connection.end();
 

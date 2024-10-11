@@ -1,49 +1,96 @@
 import NextAuth from 'next-auth';
-import GoogleProvider from 'next-auth/providers/google';
-import { db } from '../../../lib/db';
-import { Session } from "next-auth";
+import CredentialsProvider from 'next-auth/providers/credentials';
+import mysql from 'mysql2/promise';
+import bcrypt from 'bcrypt';
+import { DefaultSession, DefaultUser } from "next-auth"
+
+// Extend the built-in User type
+declare module "next-auth" {
+  interface User extends DefaultUser {
+    firstName?: string;
+    lastName?: string;
+    profileImage?: string;
+  }
+}
 
 declare module "next-auth" {
   interface Session {
-    user: {
-      id: string;
-      name?: string | null;
-      email?: string | null;
-      image?: string | null;
-    }
+    user?: {
+      firstName?: string
+      lastName?: string
+      profileImage?: string
+    } & DefaultSession["user"]
   }
 }
 
 export default NextAuth({
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || '',
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
-    }),
+    CredentialsProvider({
+      name: 'Credentials',
+      credentials: {
+        email: { label: "Email", type: "text" },
+        password: { label: "Password", type: "password" }
+      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) {
+          return null;
+        }
+
+        const connection = await mysql.createConnection({
+          host: process.env.DB_HOST,
+          user: process.env.DB_USER,
+          password: process.env.DB_PASSWORD,
+          database: process.env.DB_NAME,
+        });
+
+        const [rows] = await connection.execute(
+          'SELECT * FROM users WHERE email = ?',
+          [credentials.email]
+        ) as any;
+
+        await connection.end();
+
+        if (rows.length === 0) {
+          return null;
+        }
+
+        const user = rows[0];
+        const isPasswordValid = await bcrypt.compare(credentials.password, user.password);
+
+        if (!isPasswordValid) {
+          return null;
+        }
+
+        return { 
+          id: user.id, 
+          firstName: user.first_name, 
+          lastName: user.last_name, 
+          email: user.email 
+        };
+      }
+    })
   ],
   callbacks: {
-    async signIn({ user, account, profile }) {
-      if (account?.provider === "google") {
-        const { name, email, image } = user;
-        try {
-          const result = await db.query(
-            'INSERT INTO users (name, email, image) VALUES ($1, $2, $3) ON CONFLICT (email) DO UPDATE SET name = $1, image = $3 RETURNING *',
-            [name, email, image]
-          );
-          user.id = result.rows[0].id;
-        } catch (error) {
-          console.error('Error updating user in database:', error);
-          return false;
-        }
+    async jwt({ token, user }) {
+      if (user) {
+        token.firstName = user.firstName;
+        token.lastName = user.lastName;
+        token.profileImage = user.profileImage || '/images/default-img.jpg';
       }
-      return true;
+      return token;
     },
-    async session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.sub!;
-      }
-      return session;
+    async session({ session, token, user }) {
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          id: user?.id ?? null,
+        },
+      };
     },
   },
-  // ... other configuration options ...
+  session: {
+    strategy: 'jwt',
+  },
+  secret: process.env.NEXTAUTH_SECRET,
 });

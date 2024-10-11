@@ -10,7 +10,8 @@ export default function Login() {
   const [isSignIn, setIsSignIn] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isFlipping, setIsFlipping] = useState(false);
   const router = useRouter();
@@ -42,7 +43,7 @@ export default function Login() {
         const response = await fetch('/api/auth/signup', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, email, password }),
+          body: JSON.stringify({ firstName, lastName, email, password }),
         });
 
         if (response.ok) {
@@ -169,16 +170,28 @@ export default function Login() {
               </p>
               <form onSubmit={handleSubmit} className="space-y-4">
                 {!isSignIn && (
-                  <div>
-                    <input
-                      type="text"
-                      placeholder="Name"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      className="w-full px-4 py-3 rounded-lg border border-[#D1D5DB] text-[#111827] text-base focus:outline-none focus:ring-2 focus:ring-[#10B981]"
-                      required
-                    />
-                  </div>
+                  <>
+                    <div>
+                      <input
+                        type="text"
+                        placeholder="First Name"
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
+                        className="w-full px-4 py-3 rounded-lg border border-[#D1D5DB] text-[#111827] text-base focus:outline-none focus:ring-2 focus:ring-[#10B981]"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <input
+                        type="text"
+                        placeholder="Last Name"
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                        className="w-full px-4 py-3 rounded-lg border border-[#D1D5DB] text-[#111827] text-base focus:outline-none focus:ring-2 focus:ring-[#10B981]"
+                        required
+                      />
+                    </div>
+                  </>
                 )}
                 <div>
                   <input

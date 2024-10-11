@@ -1,13 +1,15 @@
 import * as React from 'react';
 import Link from 'next/link';
-import { FaBell, FaCog, FaUser, FaSearch, FaWallet, FaChartLine, FaUsers, FaSignOutAlt, FaMoon } from 'react-icons/fa';
+import { FaBell, FaCog, FaUser, FaSearch, FaWallet, FaChartLine, FaUsers, FaSignOutAlt, FaMoon, FaFileImport } from 'react-icons/fa';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
+import TransactionImport from '../components/TransactionImport';
 
 export default function Dashboard() {
   const router = useRouter();
   const [showNotifications, setShowNotifications] = React.useState(false);
+  const [showImportModal, setShowImportModal] = React.useState(false);
   const { data: session, status } = useSession();
 
   React.useEffect(() => {
@@ -30,11 +32,11 @@ export default function Dashboard() {
       <aside className="w-72 bg-[#121212] text-white rounded-2xl mr-3 flex flex-col">
         <div className="p-5 flex items-center">
           <Image
-            src="/logo.svg"
+            src="/images/logo.svg" // Updated path
             alt="Khaata Logo"
             width={36}
             height={36}
-            layout="responsive"
+            className="mr-2"
           />
           <h1 className="text-2xl font-bold">Khaata</h1>
         </div>
@@ -81,15 +83,14 @@ export default function Dashboard() {
           </div>
           <div className="flex items-center">
             <Image
-              src={session?.user?.image || "/default-avatar.jpg"}
+              src={session?.user?.profileImage || "/images/default-img.jpg"} // Updated path
               alt="User Avatar"
               width={40}
               height={40}
-              layout="responsive"
               className="w-10 h-10 rounded-full mr-3"
             />
             <div>
-              <p className="font-semibold">{session?.user?.name}</p>
+              <p className="font-semibold">{`${session?.user?.firstName} ${session?.user?.lastName}`}</p>
               <p className="text-sm text-gray-400">{session?.user?.email}</p>
             </div>
           </div>
@@ -115,6 +116,12 @@ export default function Dashboard() {
             >
               <FaBell className="text-gray-600" />
             </button>
+            <button 
+              className="p-2 rounded-full hover:bg-gray-200 relative"
+              onClick={() => setShowImportModal(true)}
+            >
+              <FaFileImport className="text-gray-600" />
+            </button>
             <button className="p-2 rounded-full hover:bg-gray-200">
               <FaUser className="text-gray-600" />
             </button>
@@ -135,6 +142,22 @@ export default function Dashboard() {
               <li className="text-sm">Settlement completed with Jane Smith</li>
               {/* Add more notification items */}
             </ul>
+          </div>
+        )}
+
+        {/* Import Modal */}
+        {showImportModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-8 max-w-md w-full">
+              <h2 className="text-2xl font-bold mb-4">Import Transactions</h2>
+              <TransactionImport />
+              <button
+                onClick={() => setShowImportModal(false)}
+                className="mt-4 px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
+              >
+                Close
+              </button>
+            </div>
           </div>
         )}
 
@@ -239,11 +262,10 @@ export default function Dashboard() {
           <li className="flex items-center justify-between">
             <div className="flex items-center flex-1 mr-2">
               <Image
-                src="/avatar1.jpg"
+                src="/images/default-img.jpg"
                 alt="Contact"
                 width={40}
                 height={40}
-                layout="responsive"
                 className="w-10 h-10 rounded-full mr-3"
               />
               <span className="text-[#343A40] truncate">Jane Smith</span>
@@ -253,11 +275,10 @@ export default function Dashboard() {
           <li className="flex items-center justify-between">
             <div className="flex items-center flex-1 mr-2">
               <Image
-                src="/avatar2.jpg"
+                src="/images/default-img.jpg"
                 alt="Contact"
                 width={40}
                 height={40}
-                layout="responsive"
                 className="w-10 h-10 rounded-full mr-3"
               />
               <span className="text-[#343A40] truncate">Michael Johnson</span>
@@ -267,11 +288,10 @@ export default function Dashboard() {
           <li className="flex items-center justify-between">
             <div className="flex items-center flex-1 mr-2">
               <Image
-                src="/avatar3.jpg"
+                src="/images/default-img.jpg"
                 alt="Contact"
                 width={40}
                 height={40}
-                layout="responsive"
                 className="w-10 h-10 rounded-full mr-3"
               />
               <span className="text-[#343A40] truncate">Emily Davis</span>
@@ -281,11 +301,10 @@ export default function Dashboard() {
           <li className="flex items-center justify-between">
             <div className="flex items-center flex-1 mr-2">
               <Image
-                src="/avatar4.jpg"
+                src="/images/default-img.jpg"
                 alt="Contact"
                 width={40}
                 height={40}
-                layout="responsive"
                 className="w-10 h-10 rounded-full mr-3"
               />
               <span className="text-[#343A40] truncate">Robert Wilson</span>
